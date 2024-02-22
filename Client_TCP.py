@@ -19,7 +19,7 @@ def main():
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     try:
-        # Conecta-se ao servidor
+        # Conecta-se ao servidors
         client.connect((targuet_ip,targuet_port))
 
         # Envia uma solicitação HTTP básica
