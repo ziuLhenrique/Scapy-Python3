@@ -1,40 +1,39 @@
-#!bin/python3
+#!/usr/bin/python3
 
-# Importando a biblioteca socket
 import socket
+import sys
 
-# Variável que armazena o host do alvo
-target_host = "127.0.0.1"
+def main():
+    # Verifica se o número correto de argumentos foi fornecido
+    if len(sys.argv) != 3:
+        print(f'Modo de Uso: {sys.argv[0]} <IP> <PORTA>')
+        sys.exit(1)
 
-# Variável que armazena a porta do alvo
-target_port = 9997
+    # Obtém o IP e a porta a partir dos argumentos de linha de comando
+    ip_alvo = sys.argv[1]
+    port = int(sys.argv[2])
 
-# Criando objeto socket
-# 'AF_INET' significa que a comunicação será em IPv4 ou nome de host
-# 'SOCK_DGRAM' significa que o protocolo utilizado será UDP
-client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    # Cria um socket UDP
+    client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-# Enviando alguns dados
-# OBS: O protocolo UDP não necessita de uma conexão
-# 'b' significa que os dados serão enviados em bytes
-client.sendto(b'AAABBBCCC', (target_host, target_port))
+    try:
+        # Envia dados para o servidor especificado
+        client.sendto(b"AAABBBCCC", (ip_alvo, port))
 
-# Recebendo alguns dados
-# 'recvfrom()' é utilizado para receber dados
-# 4096 é o número máximo de bytes a serem recebidos em uma única chamada
-data, addr = client.recvfrom(4096)
+        # Aguarda a resposta do servidor
+        data, addr = client.recvfrom(4096)
 
-# Exibindo os dados
-# 'print()' é usado para exibir o resultado na saída padrão (normalmente, a console)
-# 'decode()  Este é um método utilizado para converter dados binários (bytes) em uma string. 
-print(data.decode())
+        # Imprime a resposta recebida do servidor
+        print(f"Recebidos: {data.decode()}")
 
-# 'close()' é para fechar o socket
-client.close()
+    except Exception as e:
+        # Trata exceções, se ocorrerem
+        print(f"Erro: {type(e).__name__} - {e}")
 
+    finally:
+        # Fecha o socket após o uso
+        client.close()
 
-
-
-
-
-
+if __name__ == "__main__":
+    # Chama a função principal se o script for executado diretamente
+    main()
